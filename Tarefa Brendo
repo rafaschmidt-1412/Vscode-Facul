@@ -1,0 +1,74 @@
+interface CalculadoraImposto {
+  calcular(preco: number, quantidade: number): number;
+}
+
+class Eletronico implements CalculadoraImposto {
+  calcular(preco: number, quantidade: number): number {
+    const total = preco * quantidade;
+    return total + total * 0.15;
+  }
+}
+
+class Alimento implements CalculadoraImposto {
+  calcular(preco: number, quantidade: number): number {
+    const total = preco * quantidade;
+    return total + total * 0.05;
+  }
+}
+
+class Vestuario implements CalculadoraImposto {
+  calcular(preco: number, quantidade: number): number {
+    const total = preco * quantidade;
+    return total + total * 0.10;
+  }
+}
+
+interface MetodoPagamento {
+  pagar(valor: number): void;
+}
+
+class CartaoCredito implements MetodoPagamento {
+  pagar(valor: number): void {
+    console.log(`Processando cartão: R$ ${valor}`);
+  }
+}
+
+class Boleto implements MetodoPagamento {
+  pagar(valor: number): void {
+    console.log(`Gerando boleto: R$ ${valor}`);
+  }
+}
+
+class Pix implements MetodoPagamento {
+  pagar(valor: number): void {
+    console.log(`Gerando QR Code PIX: R$ ${valor}`);
+  }
+}
+
+class EmailService {
+  enviar(email: string, valor: number): void {
+    console.log(`Enviando email para ${email}: Seu pedido de R$ ${valor} foi confirmado!`);
+  }
+}
+
+class ProcessadorPedido {
+
+  calcularTotal(calculadora: CalculadoraImposto, preco: number, quantidade: number): number {
+    return calculadora.calcular(preco, quantidade);
+  }
+
+  processarPagamento(metodo: MetodoPagamento, valor: number): void {
+    metodo.pagar(valor);
+  }
+}
+
+const processador = new ProcessadorPedido();
+
+const produto = new Eletronico();
+const total = processador.calcularTotal(produto, 1000, 1);
+
+const pagamento = new Pix();
+processador.processarPagamento(pagamento, total);
+
+const email = new EmailService();
+email.enviar("cliente@email.com", total); 
